@@ -1,5 +1,9 @@
+use std::env;
+use std::path::Path;
+use std::str::FromStr;
+
 use anchor_counter_interface::{
-    increment_ix_with_program_id, initialize_ix_with_program_id, IncrementKeys, InitializeKeys,
+    increment_ix_with_program_id, IncrementKeys, initialize_ix_with_program_id, InitializeKeys,
 };
 use anyhow::anyhow;
 use solana_client::rpc_client::RpcClient;
@@ -9,13 +13,12 @@ use solana_sdk::commitment_config::CommitmentConfig;
 use solana_sdk::signature::{Keypair, Signature};
 use solana_sdk::signer::{EncodableKey, Signer};
 use solana_sdk::transaction::Transaction;
-use std::path::{self, Path};
-use std::str::FromStr;
 
 fn main() -> anyhow::Result<()> {
     /*SET THESE TO YOUR VALUES OR READ FROM ENV*/
-    let path_to_keypair = path::Path::new("/home/derked/.config/solana/id.json");
-    let program_id = "CQ2VvuR8Du2WQq1XWmzBKxmK4arc7BVReWMxUMW3nJs5";
+    let keypair_path = env::var("HOME").unwrap() + "/.config/solana/id.json";
+    let path_to_keypair = Path::new(keypair_path.as_str());
+    let program_id = "CucY6qNtxicWDtqn23bywtd3kDeaqMci4iF45wD7GYGt";
     let rpc_url = "http://localhost:8899";
 
     let SetUpClient {

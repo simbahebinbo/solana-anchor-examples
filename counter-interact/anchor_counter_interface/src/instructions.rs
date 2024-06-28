@@ -1,15 +1,18 @@
+use std::io::Read;
+
 use solana_program::{
     account_info::AccountInfo, entrypoint::ProgramResult,
     instruction::{AccountMeta, Instruction},
     program::{invoke, invoke_signed},
-    pubkey::Pubkey, program_error::ProgramError,
+    program_error::ProgramError, pubkey::Pubkey,
 };
-use std::io::Read;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum AnchorCounterProgramIx {
     Initialize,
     Increment,
 }
+
 impl AnchorCounterProgramIx {
     pub fn deserialize(buf: &[u8]) -> std::io::Result<Self> {
         let mut reader = buf;
@@ -28,18 +31,21 @@ impl AnchorCounterProgramIx {
             }
         }
     }
+
     pub fn serialize<W: std::io::Write>(&self, mut writer: W) -> std::io::Result<()> {
         match self {
             Self::Initialize => writer.write_all(&INITIALIZE_IX_DISCM),
             Self::Increment => writer.write_all(&INCREMENT_IX_DISCM),
         }
     }
+
     pub fn try_to_vec(&self) -> std::io::Result<Vec<u8>> {
         let mut data = Vec::new();
         self.serialize(&mut data)?;
         Ok(data)
     }
 }
+
 fn invoke_instruction<'info, A: Into<[AccountInfo<'info>; N]>, const N: usize>(
     ix: &Instruction,
     accounts: A,
@@ -47,6 +53,7 @@ fn invoke_instruction<'info, A: Into<[AccountInfo<'info>; N]>, const N: usize>(
     let account_info: [AccountInfo<'info>; N] = accounts.into();
     invoke(ix, &account_info)
 }
+
 fn invoke_instruction_signed<'info, A: Into<[AccountInfo<'info>; N]>, const N: usize>(
     ix: &Instruction,
     accounts: A,
@@ -55,19 +62,23 @@ fn invoke_instruction_signed<'info, A: Into<[AccountInfo<'info>; N]>, const N: u
     let account_info: [AccountInfo<'info>; N] = accounts.into();
     invoke_signed(ix, &account_info, seeds)
 }
+
 pub const INITIALIZE_IX_ACCOUNTS_LEN: usize = 3;
+
 #[derive(Copy, Clone, Debug)]
 pub struct InitializeAccounts<'me, 'info> {
     pub counter: &'me AccountInfo<'info>,
     pub user: &'me AccountInfo<'info>,
     pub system_program: &'me AccountInfo<'info>,
 }
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct InitializeKeys {
     pub counter: Pubkey,
     pub user: Pubkey,
     pub system_program: Pubkey,
 }
+
 impl From<InitializeAccounts<'_, '_>> for InitializeKeys {
     fn from(accounts: InitializeAccounts) -> Self {
         Self {
@@ -77,6 +88,7 @@ impl From<InitializeAccounts<'_, '_>> for InitializeKeys {
         }
     }
 }
+
 impl From<InitializeKeys> for [AccountMeta; INITIALIZE_IX_ACCOUNTS_LEN] {
     fn from(keys: InitializeKeys) -> Self {
         [
@@ -98,6 +110,7 @@ impl From<InitializeKeys> for [AccountMeta; INITIALIZE_IX_ACCOUNTS_LEN] {
         ]
     }
 }
+
 impl From<[Pubkey; INITIALIZE_IX_ACCOUNTS_LEN]> for InitializeKeys {
     fn from(pubkeys: [Pubkey; INITIALIZE_IX_ACCOUNTS_LEN]) -> Self {
         Self {
@@ -107,6 +120,7 @@ impl From<[Pubkey; INITIALIZE_IX_ACCOUNTS_LEN]> for InitializeKeys {
         }
     }
 }
+
 impl<'info> From<InitializeAccounts<'_, 'info>>
 for [AccountInfo<'info>; INITIALIZE_IX_ACCOUNTS_LEN] {
     fn from(accounts: InitializeAccounts<'_, 'info>) -> Self {
@@ -117,6 +131,7 @@ for [AccountInfo<'info>; INITIALIZE_IX_ACCOUNTS_LEN] {
         ]
     }
 }
+
 impl<'me, 'info> From<&'me [AccountInfo<'info>; INITIALIZE_IX_ACCOUNTS_LEN]>
 for InitializeAccounts<'me, 'info> {
     fn from(arr: &'me [AccountInfo<'info>; INITIALIZE_IX_ACCOUNTS_LEN]) -> Self {
@@ -127,6 +142,7 @@ for InitializeAccounts<'me, 'info> {
         }
     }
 }
+
 pub const INITIALIZE_IX_DISCM: [u8; 8] = [175, 175, 109, 31, 13, 152, 155, 237];
 #[derive(Clone, Debug, PartialEq)]
 pub struct InitializeIxData;
@@ -157,6 +173,7 @@ impl InitializeIxData {
         Ok(data)
     }
 }
+
 pub fn initialize_ix_with_program_id(
     program_id: Pubkey,
     keys: InitializeKeys,
@@ -168,9 +185,11 @@ pub fn initialize_ix_with_program_id(
         data: InitializeIxData.try_to_vec()?,
     })
 }
+
 pub fn initialize_ix(keys: InitializeKeys) -> std::io::Result<Instruction> {
     initialize_ix_with_program_id(crate::ID, keys)
 }
+
 pub fn initialize_invoke_with_program_id(
     program_id: Pubkey,
     accounts: InitializeAccounts<'_, '_>,

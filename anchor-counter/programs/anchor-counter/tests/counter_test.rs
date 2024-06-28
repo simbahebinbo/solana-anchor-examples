@@ -1,11 +1,11 @@
 use anchor_lang::{
-    prelude::Pubkey,
-    solana_program::{self},
-    system_program, AccountDeserialize, InstructionData, ToAccountMetas,
+    AccountDeserialize,
+    InstructionData,
+    prelude::Pubkey, solana_program::{self}, system_program, ToAccountMetas,
 };
 use anyhow::Ok;
 use solana_program::instruction::Instruction;
-use solana_program_test::{tokio, ProgramTest, ProgramTestContext};
+use solana_program_test::{ProgramTest, ProgramTestContext, tokio};
 use solana_sdk::{account::Account, signature::Keypair, signer::Signer, transaction::Transaction};
 
 #[tokio::test]
@@ -25,7 +25,7 @@ async fn test_initialize() {
             user: user.pubkey(),
             system_program: system_program::ID,
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Initialize {}.data(),
     };
 
@@ -64,7 +64,7 @@ async fn test_increment() {
             user: context.payer.pubkey(),
             system_program: system_program::ID,
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Initialize {}.data(),
     };
 
@@ -74,7 +74,7 @@ async fn test_increment() {
             counter: counter_pda,
             user: context.payer.pubkey(),
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Increment {}.data(),
     };
 
@@ -112,7 +112,7 @@ async fn test_double_increment() -> anyhow::Result<()> {
             user: user.pubkey(),
             system_program: system_program::ID,
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Initialize {}.data(),
     };
 
@@ -122,7 +122,7 @@ async fn test_double_increment() -> anyhow::Result<()> {
             counter: counter_pda,
             user: user.pubkey(),
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Increment {}.data(),
     };
 
@@ -164,10 +164,11 @@ async fn test_bogus_counter_acct() -> anyhow::Result<()> {
     let increment_ix = Instruction {
         program_id: anchor_counter::ID,
         accounts: anchor_counter::accounts::Increment {
-            counter: user.pubkey(), /*bogus_pda*/
+            counter: user.pubkey(),
+            /*bogus_pda*/
             user: user.pubkey(),
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Increment {}.data(),
     };
 
@@ -238,7 +239,7 @@ pub async fn initialize(
             user: user.pubkey(),
             system_program: system_program::ID,
         }
-        .to_account_metas(None),
+            .to_account_metas(None),
         data: anchor_counter::instruction::Initialize {}.data(),
     };
 
@@ -269,3 +270,5 @@ pub async fn load_and_deserialize<T: AccountDeserialize>(
 
     T::try_deserialize(&mut account.data.as_slice()).unwrap()
 }
+
+

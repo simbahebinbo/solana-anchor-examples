@@ -1,5 +1,6 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
+// @ts-ignore
 import { AnchorCounter } from '../target/types/anchor_counter'
 import { expect } from 'chai'
 
@@ -56,13 +57,5 @@ describe('anchor-counter', () => {
         const counterAccount2 = await program.account.counter.fetch(counter)
         expect(counterAccount2.count.toNumber()).to.equal(2)
     })
-
-    // it('will this fail if we put in a random counter account', async () => {
-    //     await program.methods
-    //         .increment()
-    //         .accounts({
-    //             counter: provider.
-    //         })
-    //         .rpc()
-    // })
 })
+

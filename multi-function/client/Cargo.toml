@@ -1,0 +1,18 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+solana-client = "1.18.15"
+solana-cli-config = "1.18.15"
+solana-clap-utils = "1.18.15"
+solana-sdk = "1.18.15"
+borsh = { version = "1.5.1", features = ["derive"] }
+
+
+
+
+

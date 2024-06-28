@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWxTW3v2RkMNvCPZcD7RMJLVX4mP");
+declare_id!("343nNiDeE2ekrgTzNEwxoDsDmZYkfm7xZc1nBL5yR9ps");
 
 #[program]
 mod multi_function {
